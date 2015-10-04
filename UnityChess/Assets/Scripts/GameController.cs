@@ -35,6 +35,7 @@ public class GameController : MonoBehaviour {
     public int MoveCounter2;
 
     public GameObject InGameMenu;
+    public GameConfigData GameConfig;
 
 	public Ray MouseOverRay;
 	public RaycastHit MouseOverRayHit;
@@ -50,7 +51,8 @@ public class GameController : MonoBehaviour {
 		ClearMoves();
 		PlayerTurn = 1;
 		MoveInProgress = false;
-	}
+        GameConfig = GameObject.Find("GameConfigData").GetComponent<GameConfigData>();
+    }
 	
 	// Update is called once per frame
 	void Update () {

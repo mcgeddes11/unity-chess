@@ -21,11 +21,14 @@ public class MainMenuController : MonoBehaviour {
     public GameObject TwoPlayerSetup;
     public GameObject MainMenu;
 
+    public string PlayerOneName;
+    public string PlayerTwoName;
+
     // Use this for initialization
     void Start () {
         InstantiateBoard();
         InstantiatePieces();
-        Debug.Log(Screen.width + " x " + Screen.height);
+        DontDestroyOnLoad(GameObject.Find("GameConfigData"));
     }
 	
 	// Update is called once per frame
@@ -43,6 +46,10 @@ public class MainMenuController : MonoBehaviour {
             GameObject OkButton = GameObject.Find("OK");
             if (OkButton.GetComponent<InstantGuiButton>().pressed)
             {
+                GameConfigData configData = GameObject.Find("GameConfigData").GetComponent<GameConfigData>();
+                configData.PlayerOneName = GameObject.Find("Player One").GetComponentInChildren<GUIText>().text;
+                configData.PlayerTwoName = GameObject.Find("Player Two").GetComponentInChildren<GUIText>().text;
+                // Save data and load level
                 Application.LoadLevel("MainGame");
             }
         }
@@ -129,3 +136,6 @@ public class MainMenuController : MonoBehaviour {
     }
 
 }
+
+
+
