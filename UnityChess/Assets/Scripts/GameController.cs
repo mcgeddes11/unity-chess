@@ -67,7 +67,7 @@ public class GameController : MonoBehaviour {
                 {
                     HighlightedSquare.GetComponent<Renderer>().material.shader = Shader.Find("Standard");
                     HighlightedSquare = MouseOverRayHit.collider.gameObject;
-                    MouseOverRayHit.collider.gameObject.GetComponent<Renderer>().material.shader = Shader.Find("Bumped Specular");
+                    MouseOverRayHit.collider.gameObject.GetComponent<Renderer>().material.shader = Shader.Find("Mobile/Bumped Specular");
                 }
             }
 
@@ -76,16 +76,6 @@ public class GameController : MonoBehaviour {
             {
                 InGameMenu.SetActive(true);
             }
-
-            // Code for displaying check message will eventually go here.
-            //if (PlayerInCheck == 1)
-            //{
-            //    Debug.Log("White player in check!");
-            //}
-            //else if (PlayerInCheck == 2)
-            //{
-            //    Debug.Log("Black player in check!");
-            //}
 
         }
         else
@@ -626,8 +616,10 @@ public class GameController : MonoBehaviour {
 
     public void EndGame()
     {
-
-
+        string winner = this.PlayerInCheck == 1 ? "White" : "Black";
+        Debug.Log("Game over!  " + winner + " player wins!");
+        // Do some sort of winning thing here, then drop back to title screen
+        Application.LoadLevel("MainMenu");
     }
 
 

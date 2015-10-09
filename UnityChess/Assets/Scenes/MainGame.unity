@@ -520,9 +520,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parentpos:
     left: 0
-    right: 982
+    right: 970
     top: 0
-    bottom: 549
+    bottom: 540
     isStyle: 0
   relative:
     left: 0
@@ -538,9 +538,9 @@ MonoBehaviour:
     isStyle: 0
   absolute:
     left: 0
-    right: 982
+    right: 970
     top: 0
-    bottom: 549
+    bottom: 540
     isStyle: 0
   layerOffset: 1
   lockPosition: 1
@@ -1480,6 +1480,7 @@ MonoBehaviour:
   MoveCounter1: 0
   MoveCounter2: 0
   InGameMenu: {fileID: 285644931}
+  GameConfig: {fileID: 0}
   DidMouseOverOccurThisFrame: 0
   HighlightedSquare: {fileID: 2092558698}
 --- !u!4 &1544568803
@@ -1704,7 +1705,7 @@ Light:
   serializedVersion: 6
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1.25
+  m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10

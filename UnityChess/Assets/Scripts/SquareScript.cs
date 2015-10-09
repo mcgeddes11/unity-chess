@@ -34,7 +34,7 @@ public class SquareScript : MonoBehaviour {
             {
                 // Set "selected" color
 
-                PieceOnSquare.gameObject.GetComponent<Renderer>().material.shader = Shader.Find("Transparent");
+                PieceOnSquare.gameObject.GetComponent<Renderer>().material.shader = Shader.Find("Mobile/Bumped Specular");
                 gameController.MoveInProgress = true;
                 gameController.SquareSelected = gameObject;
                 
@@ -115,12 +115,21 @@ public class SquareScript : MonoBehaviour {
                         gameController.SquareSelected.GetComponent<SquareScript>().PieceOnSquare = null;
                         gameController.SquareSelected = null;
 
+                        if (gameController.PlayerInCheck == 1)
+                        {
+                            Debug.Log("White player in check!");
+                        } else if (gameController.PlayerInCheck == 2)
+                        {
+                            Debug.Log("Black player in check!");
+                        }
+
 
                         // If game isn't over, update gamecontroller turn indicator
                         if (mate)
                         {
                             // End the game
                             gameController.EndGame();
+                            
                         }
                         else
                         {
