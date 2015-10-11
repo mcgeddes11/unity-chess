@@ -616,8 +616,8 @@ public class GameController : MonoBehaviour {
 
     public void EndGame()
     {
-        string winner = this.PlayerInCheck == 1 ? "White" : "Black";
-        Debug.Log("Game over!  " + winner + " player wins!");
+        string winner = this.PlayerInCheck == 1 ? GameConfig.PlayerOneName : GameConfig.PlayerTwoName;
+        Debug.Log("Game over!  " + winner + " wins!");
         // Do some sort of winning thing here, then drop back to title screen
         Application.LoadLevel("MainMenu");
     }

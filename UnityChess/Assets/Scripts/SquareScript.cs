@@ -117,10 +117,10 @@ public class SquareScript : MonoBehaviour {
 
                         if (gameController.PlayerInCheck == 1)
                         {
-                            Debug.Log("White player in check!");
+                            Debug.Log(gameController.GameConfig.PlayerOneName + " is in check!");
                         } else if (gameController.PlayerInCheck == 2)
                         {
-                            Debug.Log("Black player in check!");
+                            Debug.Log(gameController.GameConfig.PlayerTwoName + " is in check!");
                         }
 
 
