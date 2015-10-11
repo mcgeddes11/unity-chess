@@ -26,6 +26,11 @@ public class SquareScript : MonoBehaviour {
 
 
 	void OnMouseUp(){
+
+        if (gameController.PieceIsMoving)
+        {
+            return;
+        }
         if (!gameController.InGameMenu.activeSelf)
         {
             // If we aren't mid-move, square is occupied by someone whose turn it is then:
@@ -94,48 +99,14 @@ public class SquareScript : MonoBehaviour {
                             gameController.PlayerInCheck = 0;
                         }
 
-                        // Move piece
-                        gameController.MovePiece();
-                        // Update pieceonsquare
-                        PieceOnSquare = gameController.SquareSelected.GetComponent<SquareScript>().PieceOnSquare;
-                        PieceOnSquare.RowRef = this.RowRef;
-                        PieceOnSquare.ColRef = this.ColRef;
-                        // Change back to original color
-                        PieceOnSquare.gameObject.GetComponent<Renderer>().material.shader = Shader.Find("Standard");
-                        // Clear possible moves on game controller
-                        gameController.ClearMoves();
-                        // End move
-                        gameController.MoveInProgress = false;
-                        // Clear target square on game controller
-                        gameController.TargetSquare = null;
-                        // Update isOccupied
-                        IsOccupied = true;
-                        // Update old square values
-                        gameController.SquareSelected.GetComponent<SquareScript>().IsOccupied = false;
-                        gameController.SquareSelected.GetComponent<SquareScript>().PieceOnSquare = null;
-                        gameController.SquareSelected = null;
-
-                        if (gameController.PlayerInCheck == 1)
-                        {
-                            Debug.Log(gameController.GameConfig.PlayerOneName + " is in check!");
-                        } else if (gameController.PlayerInCheck == 2)
-                        {
-                            Debug.Log(gameController.GameConfig.PlayerTwoName + " is in check!");
-                        }
-
-
-                        // If game isn't over, update gamecontroller turn indicator
                         if (mate)
                         {
-                            // End the game
-                            gameController.EndGame();
-                            
+                            gameController.GameOver = true;
                         }
-                        else
-                        {
-                            gameController.ChangeTurn();
-                        }
-                            
+
+                        // Move piece
+                        gameController.MovePiece();
+
 
                     } else
                     {

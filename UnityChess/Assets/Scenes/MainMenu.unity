@@ -3153,6 +3153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerOneName: 
   PlayerTwoName: 
+  MovementSpeed: 5
 --- !u!4 &1054867458
 Transform:
   m_ObjectHideFlags: 0

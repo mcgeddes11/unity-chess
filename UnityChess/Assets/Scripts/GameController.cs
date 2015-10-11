@@ -5,9 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class GameController : MonoBehaviour {
-	public Rigidbody WhiteSquare;
+    // Board instantiation
+    public Rigidbody WhiteSquare;
 	public Rigidbody BlackSquare;
 
+    // Piece instantiation
 	public Rigidbody BlackPawn;
 	public Rigidbody BlackRook;
 	public Rigidbody BlackKnight;
@@ -21,7 +23,7 @@ public class GameController : MonoBehaviour {
 	public Rigidbody WhiteQueen;
 	public Rigidbody WhiteKing;
 	
-
+    // Game mechanics
 	public int[,] BoardLayout;
     public int[,] OwnerLayout;
 	public int PlayerTurn;	
@@ -31,12 +33,18 @@ public class GameController : MonoBehaviour {
 	public GameObject TargetSquare;
     public int PlayerInCheck;
     public bool GameOver;
-    public int MoveCounter1;
-    public int MoveCounter2;
+    public bool PieceIsMoving;
 
+    // References to the menu and the game config
     public GameObject InGameMenu;
     public GameConfigData GameConfig;
 
+    // Game tracking variables
+    public int MoveCounter1;
+    public int MoveCounter2;
+    public List<string> AllPositionsFen;
+
+    // Variables for highlighting squares on mouse over
 	public Ray MouseOverRay;
 	public RaycastHit MouseOverRayHit;
 	public bool DidMouseOverOccurThisFrame;
@@ -99,6 +107,24 @@ public class GameController : MonoBehaviour {
             if (Input.GetKeyUp(KeyCode.Escape))
             {
                 InGameMenu.SetActive(false);
+            }
+
+        }
+
+        if (PieceIsMoving)
+        {
+            // Trigger animation
+            Vector3 target = TargetSquare.transform.position;
+            GameObject piece = SquareSelected.GetComponent<SquareScript>().PieceOnSquare.gameObject;
+            Vector3 pieceTransform = piece.transform.position;
+            target.y = pieceTransform.y;
+            piece.transform.position = Vector3.MoveTowards(pieceTransform, target, GameConfig.MovementSpeed * Time.deltaTime);
+            // Check if move is complete, if so call FinalizeMove()
+            Vector3 posCheck = piece.transform.position - target;
+            if (Mathf.Abs(posCheck.x) < 0.0001 && Mathf.Abs(posCheck.z) < 0.0001)
+            {
+                PieceIsMoving = false;
+                FinalizeMove();
             }
 
         }
@@ -424,37 +450,7 @@ public class GameController : MonoBehaviour {
 	}	
 	
 	public void MovePiece(){
-		ChessPiece pieceToMove = SquareSelected.GetComponent<SquareScript>().PieceOnSquare;
-		Vector3 origin = pieceToMove.transform.position;
-		Vector3 destination = TargetSquare.transform.position;
-		pieceToMove.transform.position = new Vector3(destination.x, pieceToMove.YOffset, destination.z);
-		// Deal with taking the other piece here
-		if (TargetSquare.GetComponent<SquareScript>().IsOccupied){
-			Destroy(TargetSquare.GetComponent<SquareScript>().PieceOnSquare.gameObject);
-		}
-		// Pawn advancement
-		if (pieceToMove.PieceName == "Pawn"){
-			// White
-			if (pieceToMove.PieceOwner == 1 && TargetSquare.GetComponent<SquareScript>().RowRef == 0){
-				BoardLayout[pieceToMove.RowRef,pieceToMove.ColRef] = 5;
-				Destroy (pieceToMove.gameObject);
-				Instantiate (WhiteQueen, new Vector3(destination.x, 0, destination.z), GameObject.Find ("Board").transform.rotation);
-			// Black
-			} else if (pieceToMove.PieceOwner == 2 && TargetSquare.GetComponent<SquareScript>().RowRef == 7) {
-				BoardLayout[pieceToMove.RowRef,pieceToMove.ColRef] = 5;
-				Destroy (pieceToMove.gameObject);
-				Instantiate (BlackQueen, new Vector3(destination.x, 0, destination.z), GameObject.Find ("Board").transform.rotation);
-			}
-			
-			
-		}
-		
-		// Update the board layout and owner layout
-		BoardLayout[TargetSquare.GetComponent<SquareScript>().RowRef,TargetSquare.GetComponent<SquareScript>().ColRef] = BoardLayout[pieceToMove.RowRef,pieceToMove.ColRef];
-		BoardLayout[pieceToMove.RowRef,pieceToMove.ColRef] = 0;
-        OwnerLayout[TargetSquare.GetComponent<SquareScript>().RowRef, TargetSquare.GetComponent<SquareScript>().ColRef] = OwnerLayout[pieceToMove.RowRef, pieceToMove.ColRef];
-        OwnerLayout[pieceToMove.RowRef, pieceToMove.ColRef] = 0;
-
+        PieceIsMoving = true;
     }
 	
 	public void ChangeTurn(){
@@ -613,6 +609,97 @@ public class GameController : MonoBehaviour {
         return mate.All(x => x == true);
 	}
 	
+
+    public void FinalizeMove()
+    {
+        ChessPiece pieceToMove = SquareSelected.GetComponent<SquareScript>().PieceOnSquare;
+        Vector3 origin = pieceToMove.transform.position;
+        Vector3 destination = TargetSquare.transform.position;
+        //pieceToMove.transform.position = new Vector3(destination.x, pieceToMove.YOffset, destination.z);
+        // Deal with taking the other piece here
+        if (TargetSquare.GetComponent<SquareScript>().IsOccupied)
+        {
+            Destroy(TargetSquare.GetComponent<SquareScript>().PieceOnSquare.gameObject);
+        }
+        // Pawn advancement
+        if (pieceToMove.PieceName == "Pawn")
+        {
+            // White
+            if (pieceToMove.PieceOwner == 1 && TargetSquare.GetComponent<SquareScript>().RowRef == 0)
+            {
+                BoardLayout[pieceToMove.RowRef, pieceToMove.ColRef] = 5;
+                Destroy(pieceToMove.gameObject);
+                Instantiate(WhiteQueen, new Vector3(destination.x, 0, destination.z), GameObject.Find("Board").transform.rotation);
+                // Black
+            }
+            else if (pieceToMove.PieceOwner == 2 && TargetSquare.GetComponent<SquareScript>().RowRef == 7)
+            {
+                BoardLayout[pieceToMove.RowRef, pieceToMove.ColRef] = 5;
+                Destroy(pieceToMove.gameObject);
+                Instantiate(BlackQueen, new Vector3(destination.x, 0, destination.z), GameObject.Find("Board").transform.rotation);
+            }
+        }
+
+        // Update the board layout and owner layout
+        BoardLayout[TargetSquare.GetComponent<SquareScript>().RowRef, TargetSquare.GetComponent<SquareScript>().ColRef] = BoardLayout[pieceToMove.RowRef, pieceToMove.ColRef];
+        BoardLayout[pieceToMove.RowRef, pieceToMove.ColRef] = 0;
+        OwnerLayout[TargetSquare.GetComponent<SquareScript>().RowRef, TargetSquare.GetComponent<SquareScript>().ColRef] = OwnerLayout[pieceToMove.RowRef, pieceToMove.ColRef];
+        OwnerLayout[pieceToMove.RowRef, pieceToMove.ColRef] = 0;
+
+        // Update pieceonsquare
+        ChessPiece PieceOnSquare = SquareSelected.GetComponent<SquareScript>().PieceOnSquare;
+        PieceOnSquare.RowRef = TargetSquare.GetComponent<SquareScript>().RowRef;
+        PieceOnSquare.ColRef = TargetSquare.GetComponent<SquareScript>().ColRef;
+        // Change back to original color
+        PieceOnSquare.gameObject.GetComponent<Renderer>().material.shader = Shader.Find("Standard");
+        // Clear possible moves on game controller
+        ClearMoves();
+        // Update isOccupied
+        TargetSquare.GetComponent<SquareScript>().IsOccupied = true;
+        TargetSquare.GetComponent<SquareScript>().PieceOnSquare = PieceOnSquare;
+        // End move
+        MoveInProgress = false;
+        // Clear target square on game controller
+        TargetSquare = null;
+        // Update old square values
+        SquareSelected.GetComponent<SquareScript>().IsOccupied = false;
+        SquareSelected.GetComponent<SquareScript>().PieceOnSquare = null;
+        SquareSelected = null;
+
+        if (PlayerInCheck == 1)
+        {
+            Debug.Log(GameConfig.PlayerOneName + " is in check!");
+        }
+        else if (PlayerInCheck == 2)
+        {
+            Debug.Log(GameConfig.PlayerTwoName + " is in check!");
+        }
+        
+        // Update move counters
+        if (PlayerTurn == 1)
+        {
+            MoveCounter1++;
+        } else
+        {
+            MoveCounter2++;
+        }
+
+
+
+        // If game isn't over, update gamecontroller turn indicator
+        if (GameOver)
+        {
+            // End the game
+            EndGame();
+
+        }
+        else
+        {
+            ChangeTurn();
+        }
+
+
+    }
 
     public void EndGame()
     {

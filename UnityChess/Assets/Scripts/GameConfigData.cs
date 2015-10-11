@@ -5,6 +5,7 @@ public class GameConfigData : MonoBehaviour
 {
     public string PlayerOneName;
     public string PlayerTwoName;
+    public float MovementSpeed;
 
     public void Start()
     {

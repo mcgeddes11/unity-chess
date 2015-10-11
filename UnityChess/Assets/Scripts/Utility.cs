@@ -19,4 +19,32 @@ public class Utility {
 		}
 		Debug.Log (sb.ToString ());
 	}
+
+    public string BoardToFen(int[,] boardLayout, int[,] ownerLayout, int playerTurn)
+    {
+        // Remember - this function will be passed AFTER the move is made, but BEFORE control is passed to the other player.
+        // So we have to flip them (ie. player to go NEXT is white when playerTurn == 2 and black when playerTurn == 2)
+        string turnString;
+        if (playerTurn == 1)
+        {
+            turnString = "b";
+        } else
+        {
+            turnString = "w";
+        }
+
+        StringBuilder fenBuilder = new StringBuilder();
+        for (int r = 0; r < 7; r++)
+        {
+            for (int c=0; c < 7; c++)
+            {
+                // TO DO: castling rights not included yet...
+                
+            }
+        }
+
+        return "";
+    }
+
+
 }
