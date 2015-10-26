@@ -43,6 +43,7 @@ public class GameController : MonoBehaviour {
     public int MoveCounter1;
     public int MoveCounter2;
     public List<string> AllPositionsFen;
+    public List<string> AllMoves;
 
     // Variables for highlighting squares on mouse over
 	public Ray MouseOverRay;
@@ -640,6 +641,10 @@ public class GameController : MonoBehaviour {
             }
         }
 
+        // Call to add to the moves list goes here?
+        //bool isCapture = OwnerLayout[TargetSquare.GetComponent<SquareScript>().RowRef, TargetSquare.GetComponent<SquareScript>().ColRef] != 0;
+        //AddMoveToLog(pieceToMove.RowRef, pieceToMove.ColRef, TargetSquare.GetComponent<SquareScript>().RowRef, TargetSquare.GetComponent<SquareScript>().ColRef, isCapture, pieceToMove.PieceType);
+
         // Update the board layout and owner layout
         BoardLayout[TargetSquare.GetComponent<SquareScript>().RowRef, TargetSquare.GetComponent<SquareScript>().ColRef] = BoardLayout[pieceToMove.RowRef, pieceToMove.ColRef];
         BoardLayout[pieceToMove.RowRef, pieceToMove.ColRef] = 0;
@@ -708,6 +713,7 @@ public class GameController : MonoBehaviour {
         // Do some sort of winning thing here, then drop back to title screen
         Application.LoadLevel("MainMenu");
     }
+
 
 
 

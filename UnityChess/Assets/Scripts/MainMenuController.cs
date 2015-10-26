@@ -49,6 +49,7 @@ public class MainMenuController : MonoBehaviour {
                 GameConfigData configData = GameObject.Find("GameConfigData").GetComponent<GameConfigData>();
                 configData.PlayerOneName = GameObject.Find("Player White").GetComponentInChildren<GUIText>().text;
                 configData.PlayerTwoName = GameObject.Find("Player Black").GetComponentInChildren<GUIText>().text;
+                configData.NumPlayers = 2;
                 // Save data and load level
                 Application.LoadLevel("MainGame");
             }
